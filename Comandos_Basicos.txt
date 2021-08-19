@@ -1,0 +1,37 @@
+man comando -> manual o explicación del comando
+
+# comandos basicos
+pwd ->  muestra la ruta donde nos encontramos posicionados
+
+clear -> limpia la terminal
+cls (wimdows cmd)
+
+
+history -> historial de los comandos ejecutados
+history > mis_comandos.txt
+
+ls -> lista el contenidos de la ubicacion actual, muestra un resumen de carpetas y archivos
+
+ls -l -> muestra un resumen de carpetas y archivos (l, enlace simbolico o acceso directo), pero con sus permisos r(read) w(write) x(execute) 
+
+ls -la -> muestra un resumen de carpetas y archivos,incluye todos los archivos ocultos 
+
+mkdir nombre_carpeta -> crear una carpeta
+cd nombre_carpeta -> acceder a la carpeta
+cd .. -> regresar al directorio superior
+cd / ->  regresa al directorio raiz
+
+
+
+touch prueba.txt -> crea un archivo, la extension del archivo la define el usuario 
+
+
+
+
+
+
+
+
+
+
+

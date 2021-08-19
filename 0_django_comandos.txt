@@ -1,0 +1,237 @@
+Abrir terminal e ingresar con Git bash (+ bash)
+
+1) ver si tenemos django
+	pip3 list o pip list(windows)
+
+2) de no tener instalado ejecutar :
+	pip3 install django (mac)
+	pip install django (Windows)
+
+3) Creamos el entorno virtual
+	python3 -m venv   Nombre_entorno  (mac)
+	python -m venv Nombre_entorno (Windows)
+
+4) Activar el entorno
+	source Nombre_entorno/bin/activate  (mac)
+	source Nombre_entorno/bin/activate.fish  (mac)
+	
+	call Nombre_entorno\Scripts\activate (Windows cmd)
+	source Nombre_entorno/Scripts/activate (Windows git bash, en este punto ejecutar en terminal
+	+ bash)
+	(En caso de que no no estar instalado en entorno virtual, instalar Django, paso 2) en entorno virtual)
+
+Sebastian Rojas@DESKTOP-A2ISJAP MINGW64 ~/Documents/coding_dojo
+$ python -m venv entorno_virtual_python
+
+Sebastian Rojas@DESKTOP-A2ISJAP MINGW64 ~/Documents/coding_dojo
+$ source entorno_virtual_python/Scripts/activate
+(entorno_virtual_python)
+	
+5) crear proyecto
+	django-admin startproject nombre_proyecto
+
+Sebastian Rojas@DESKTOP-A2ISJAP MINGW64 ~/Documents/coding_dojo
+$ django-admin startproject proyecto_test
+(entorno_virtual_python)
+
+6) accedemos al proyecto
+	cd nombre_proyecto
+
+Sebastian Rojas@DESKTOP-A2ISJAP MINGW64 ~/Documents/coding_dojo
+$ cd proyecto_test/
+(entorno_virtual_python) 
+
+7) creamos una aplicación dentro del proyecto
+	python manage.py startapp login  (login nombre de app)
+
+Sebastian Rojas@DESKTOP-A2ISJAP MINGW64 ~/Documents/coding_dojo/proyecto_test
+$ python manage.py startapp cliente
+Traceback (most recent call last):
+  File "C:\Users\Sin Cuenta Creada\Documents\coding_dojo\proyecto_test\manage.py", line 10, in main
+    from django.core.management import execute_from_command_line
+ModuleNotFoundError: No module named 'django'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sin Cuenta Creada\Documents\coding_dojo\proyecto_test\manage.py", line 21, in <module>        
+    main()
+  File "C:\Users\Sin Cuenta Creada\Documents\coding_dojo\proyecto_test\manage.py", line 12, in main
+    raise ImportError(
+ImportError: Couldn't import Django. Are you sure it's installed and available on your PYTHONPATH environment variable? Did you forget to activate a virtual environment?
+(entorno_virtual_python) 
+Sebastian Rojas@DESKTOP-A2ISJAP MINGW64 ~/Documents/coding_dojo/proyecto_test
+$ pip list
+Package    Version
+---------- -------
+pip        21.1.3
+setuptools 56.0.0
+WARNING: You are using pip version 21.1.3; however, version 21.2.4 is available.
+You should consider upgrading via the 'c:\users\sin cuenta creada\documents\coding_dojo\entorno_virtual_python\scripts\python.exe -m pip install --upgrade pip' command.
+(entorno_virtual_python) 
+Sebastian Rojas@DESKTOP-A2ISJAP MINGW64 ~/Documents/coding_dojo/proyecto_test
+$ pip install django
+Collecting django
+  Downloading Django-3.2.6-py3-none-any.whl (7.9 MB)
+     |████████████████████████████████| 7.9 MB 6.4 MB/s 
+Collecting asgiref<4,>=3.3.2
+  Downloading asgiref-3.4.1-py3-none-any.whl (25 kB)
+Collecting pytz
+  Using cached pytz-2021.1-py2.py3-none-any.whl (510 kB)
+Collecting sqlparse>=0.2.2
+  Using cached sqlparse-0.4.1-py3-none-any.whl (42 kB)
+Installing collected packages: sqlparse, pytz, asgiref, django
+Successfully installed asgiref-3.4.1 django-3.2.6 pytz-2021.1 sqlparse-0.4.1
+WARNING: You are using pip version 21.1.3; however, version 21.2.4 is available.
+You should consider upgrading via the 'c:\users\sin cuenta creada\documents\coding_dojo\entorno_virtual_python\scripts\python.exe -m pip install --upgrade pip' command.
+
+Sebastian Rojas@DESKTOP-A2ISJAP MINGW64 ~/Documents/coding_dojo/proyecto_test
+$ python manage.py startapp cliente
+(entorno_virtual_python) 
+
+8) importar en setting la app creada
+	INSTALLED_APPS=[
+	'login',
+	… ]
+
+En proyecto_test, settings.py, agregar el nombre de al app:
+
+INSTALLED_APPS = [
+    'cliente',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+
+	
+9) Modificar urls.py de la aplicación
+	
+	from django.contrib import admin
+	from django.urls import path, include
+	
+	urlpatterns = [
+	    path('', include('login.urls')),
+	]
+
+En el ejemplo:
+
+from django.urls import path, include
+from . import views
+	
+
+	
+10) Crear urls.py en app y agregar 
+	
+	from django.urls import path, include
+	from . import views
+	
+	urlpatterns = [
+	    path('', views.login), 
+	]
+
+En el ejemplo:
+
+urlpatterns = [
+    path('', views.inicio),
+    #path('/inicio', views.inicio),
+    path('inicio', views.inicio),
+    path('agregar', views.agregar),
+	
+11) Crear en view.py de al app 
+	from django.shortcuts import render, HttpResponse
+	def index(request):
+	    return HttpResponse("this is the equivalent of @app.route('/')!")
+
+En el ejemplo inicial:
+
+from django.shortcuts import render, HttpResponse
+
+from .models import Cliente
+
+def inicio(request):
+    # return HttpResponse("this is the equivalent of @app.route('/')!")
+    return render(request, "index.html")
+
+def agregar(request):
+    # request.post['parametro']
+    # capturando los parametros enviados por el formulario
+    Cliente.objects.create(
+    nombre = request.POST['nombre'],
+    apellido = request.POST['apellido'],
+    rut = request.POST['rut'],
+    dv = request.POST['dv'],
+    email = request.POST['email'],
+    password = request.POST['password'],
+    direccion = request.POST['direccion']
+    )
+    return render(request, "index.html")
+	
+12) crear models en app…
+
+from django.db import models
+
+# Create your models here.
+
+class Cliente(models.Model):
+    nombre = models.CharField(max_length=50)
+    apellido = models.CharField(max_length=50)
+    rut = models.CharField(max_length=12)
+    dv = models.CharField(max_length=1)
+    email = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    direccion = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+13)
+En la app cliente (o la creada), crear la carpeta "templates" y dentro el archivo html (index.html)
+
+<html lang="en">
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Cliente ::</title>
+</head>
+<body>
+    <h1>Index Cliente ::</h1>
+    <form method="POST" action="agregar">
+        {% csrf_token %}
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre">
+        <br>
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" placeholder="Apellido">
+        <br>
+        <label for="rut">RUT:</label>
+        <input type="text" id="rut" name="rut" placeholder="Rut">
+        <br>
+        <label for="dv">DV:</label>
+        <input type="text" id="dv" name="dv" placeholder="DV">
+        <br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" placeholder="Email">
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Password">
+        <br>
+        <label for="direccion">Direccion:</label>
+        <input type="text" id="direccion" name="direccion" placeholder="Direccion">
+        <br>
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>
+
+14) crear migracion 
+	python manage.py makemigrations
+
+15) migrar 
+	python manage.py migrate
+
+16) Ejecutar la aplicación
+python manage.py runserver
